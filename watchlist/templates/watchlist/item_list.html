@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie & Book Watchlist</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        h1 { margin-bottom: 10px; }
+        .item { border: 1px solid #ddd; padding: 15px; margin-bottom: 12px; border-radius: 6px; }
+        .done { background-color: #f0f0f0; }
+        .meta { color: #555; font-size: 0.9em; margin: 6px 0; }
+        a.button { display: inline-block; background: #007bff; color: white; padding: 8px 14px; text-decoration: none; border-radius: 4px; margin-right: 8px; }
+        a.button.secondary { background: #6c757d; }
+        a.button.success { background: #28a745; }
+    </style>
+</head>
+<body>
+    <h1>Movie & Book Watchlist</h1>
+    <p><a href="{% url 'item_create' %}" class="button">+ Add New Item</a></p>
+
+    {% for item in items %}
+        <div class="item {% if item.status == 'done' %}done{% endif %}">
+            <strong>{{ item.title }}</strong>
+            <div class="meta">
+                {{ item.get_item_type_display }} · 
+                {{ item.get_status_display }}
+                {% if item.rating %} · Rating: {{ item.rating }}/5{% endif %}
+            </div>
+            {% if item.review %}
+                <p>{{ item.review }}</p>
+            {% endif %}
+            <a href="{% url 'item_edit' item.pk %}" class="button secondary">Edit</a>
+            {% if item.status == 'want' %}
+                <a href="{% url 'mark_done' item.pk %}" class="button success">Mark as Done</a>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>No items yet. Add your first movie or book!</p>
+    {% endfor %}
+</body>
+</html>
